@@ -1,6 +1,6 @@
 # I Gede Bagus Saka Sinatrya - 5027241088
 
-## Command CLI
+## Konfigurasi IP & Command CLI
 
 ### 1. Konfigurasi 4 Switch di Kantor Pusat (Membuat "kamar" VLAN)
 
