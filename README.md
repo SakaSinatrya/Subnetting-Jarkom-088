@@ -1,5 +1,214 @@
 # I Gede Bagus Saka Sinatrya - 5027241088
 
+## Command CLI
+
+### 1. Konfigurasi 4 Switch di Kantor Pusat (Membuat "kamar" VLAN)
+
+#### 1.1 SW_Sekretariat
+```
+hostname SW_Sekretariat
+
+//Buat VLAN 10
+vlan 10
+ name LAN_Sekretariat
+
+//Masukkan port Router & PC ke VLAN 10
+interface range FastEthernet0/1 - 2
+ switchport mode access
+ switchport access vlan 10
+
+end
+write memory
+```
+
+#### 1.2 SW_Kurikulum
+```
+hostname SW_Kurikulum
+
+vlan 20
+ name LAN_Kurikulum
+
+interface range FastEthernet0/1 - 2
+ switchport mode access
+ switchport access vlan 20
+
+end
+write memory
+```
+
+#### 1.3 SW_GuruTendik
+```
+hostname SW_GuruTendik
+
+vlan 30
+ name LAN_GuruTendik
+
+interface range FastEthernet0/1 - 2
+ switchport mode access
+ switchport access vlan 30
+
+end
+write memory
+```
+
+#### 1.4 SW_Sarpras
+```
+hostname SW_Sarpras
+
+vlan 40
+ name LAN_Sarpras
+
+interface range FastEthernet0/1 - 2
+ switchport mode access
+ switchport access vlan 40
+
+end
+write memory
+```
+
+### 2. Konfigurasi Router (Gateway & Routing)
+
+#### 2.1 R_KantorPusat
+```
+hostname R_KantorPusat
+
+! === BUAT INTERFACE VIRTUAL (SVI) UNTUK GATEWAY ===
+interface Vlan10
+ description Gateway_Sekretariat
+ ip address 10.128.0.1 255.255.254.0
+ no shutdown
+ exit
+
+interface Vlan20
+ description Gateway_Kurikulum
+ ip address 10.128.2.1 255.255.255.0
+ no shutdown
+ exit
+
+interface Vlan30
+ description Gateway_GuruTendik
+ ip address 10.128.3.1 255.255.255.128
+ no shutdown
+ exit
+
+interface Vlan40
+ description Gateway_Sarpras
+ ip address 10.128.3.129 255.255.255.192
+ no shutdown
+ exit
+
+! === MASUKKAN PORT FISIK KE VLAN ===
+interface GigabitEthernet0/1/0
+ description --- ke SW_Sekretariat ---
+ switchport mode access
+ switchport access vlan 10
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1/1
+ description --- ke SW_Kurikulum ---
+ switchport mode access
+ switchport access vlan 20
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1/2
+ description --- ke SW_GuruTendik ---
+ switchport mode access
+ switchport access vlan 30
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1/3
+ description --- ke SW_Sarpras ---
+ switchport mode access
+ switchport access vlan 40
+ no shutdown
+ exit
+
+! === KONFIGURASI PORT L3 BAWAAN ===
+! Port ke Server
+interface GigabitEthernet0/0/0
+ description LAN_Server_Admin
+ ip address 10.128.3.225 255.255.255.248
+ no shutdown
+ exit
+
+! Port ke Kantor Cabang (WAN)
+interface GigabitEthernet0/0/1
+ description Link_WAN_ke_Cabang
+ ip address 10.128.3.233 255.255.255.252
+ no shutdown
+ exit
+
+! === STATIC ROUTING ===
+! Cara menuju LAN Pengawas
+ip route 10.128.3.192 255.255.255.224 10.128.3.234
+
+end
+write memory
+```
+
+#### 2.2 R_KantorCabang
+```
+hostname R_KantorCabang
+
+! === KONFIGURASI PORT L3 BAWAAN ===
+
+! Port ke LAN Pengawas 
+interface GigabitEthernet0/0/0
+ description LAN_Pengawas
+ ip address 10.128.3.193 255.255.255.224
+ no shutdown
+ exit
+
+! Port ke Kantor Pusat (WAN) 
+interface GigabitEthernet0/0/1
+ description Link_WAN_ke_Pusat
+ ip address 10.128.3.234 255.255.255.252
+ no shutdown
+ exit
+
+! === STATIC ROUTING (SUPERNET) ===
+! Cara menuju SEMUA LAN di Kantor Pusat (Hasil CIDR)
+ip route 10.128.0.0 255.255.252.0 10.128.3.233
+
+end
+write memory
+```
+
+### Fase 3: Konfigurasi Host (PC/Server)
+
+PC-PT3 (Sekretariat):
+- IP: 10.128.0.2
+- Mask: 255.255.254.0
+- Gateway: 10.128.0.1
+
+PC-PT1 (Kurikulum):
+- IP: 10.128.2.2
+- Mask: 255.255.255.0
+- Gateway: 10.128.2.1
+
+PC-PT2 (Guru & Tendik):
+- IP: 10.128.3.2
+- Mask: 255.255.255.128
+- Gateway: 10.128.3.1
+
+PC-PT0 (Sarpras):
+- IP: 10.128.3.130
+- Mask: 255.255.255.192
+- Gateway: 10.128.3.129
+
+Server-PT0 (Server & Admin):
+- IP: 10.128.3.226
+- Mask: 255.255.255.248
+- Gateway: 10.128.3.225
+
+PC-PT6 (Pengawas - Cabang):
+- IP: 10.128.3.194
+- Mask: 255.255.255.224
+- Gateway: 10.128.3.193
+
 ## Dokumentasi Topologi 
 ![cpt](asset/cpt_subnetting.png)
 
