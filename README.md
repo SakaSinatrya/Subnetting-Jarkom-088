@@ -1,5 +1,30 @@
 # I Gede Bagus Saka Sinatrya - 5027241088
 
+## Perhitungan Supernetting CIDR
+
+### 1.Menentukan Jaringan (Input)
+Kita mulai dengan mengidentifikasi semua jaringan yang ingin kita gabungkan. Dari "Tabel Visualisasi Supernetting", kita memiliki 5 jaringan ini:
+- 10.128.0.0/23 (Sekretariat)
+- 10.128.2.0/24 (Kurikulum)
+- 10.128.3.0/25 (Guru & Tendik)
+- 10.128.3.128/26 (Sarpras)
+- 10.128.3.224/29 (Server & Admin)
+
+### 2. Mencari Network ID dan Prefix
+- Cari Alamat Terendah: Lihat daftar di atas. Alamat network paling awal adalah 10.128.0.0. Ini menjadi Network ID Supernet kita.
+- Cari Alamat Tertinggi: Kita perlu tahu alamat tertinggi yang digunakan. Alamat tertinggi adalah Broadcast ID dari jaringan Server & Admin, yaitu 10.128.3.231 (dari perhitungan VLSM sebelumnya).
+- Bandingkan dalam Biner: Kita bandingkan biner dari alamat terendah (10.128.0.0) dan tertinggi (10.128.3.231).
+  `Alamat Terendah: 00001010.10000000.00000000.00000000`
+  `Alamat Tertinggi: 00001010.10000000.00000011.11100111`
+
+  Fokus ke oktet ke 3
+  `Oktet 3 (0): 00000000`
+  `Oktet 3 (3): 00000011`
+- Hitung Bit yang Sama: Kita lihat bit-nya sama untuk 6 posisi pertama (000000). Bit-nya mulai berbeda di posisi ke-7.
+- Tentukan Prefix: Jumlah total bit yang sama dari awal adalah:
+  8 (Oktet 1) + 8 (Oktet 2) + 6 (Oktet 3) = 22 bit.
+- Ini memberi kita Prefix /22.
+  
 ## Konfigurasi IP & Command CLI
 
 ### 1. Konfigurasi 4 Switch di Kantor Pusat (Membuat "kamar" VLAN)
