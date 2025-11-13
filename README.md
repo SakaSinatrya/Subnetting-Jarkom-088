@@ -24,6 +24,29 @@ Kita mulai dengan mengidentifikasi semua jaringan yang ingin kita gabungkan. Dar
 - Tentukan Prefix: Jumlah total bit yang sama dari awal adalah:
   8 (Oktet 1) + 8 (Oktet 2) + 6 (Oktet 3) = 22 bit.
 - Ini memberi kita Prefix /22.
+
+### 3. Mencari Mask
+Mask hanyalah cara penulisan lain dari Prefix /22.
+- /22 berarti ada 22 bit angka "1" diikuti oleh 10 bit angka "0".
+- Biner: 11111111 . 11111111 . 11111100 . 00000000
+- Desimal: 255.255.252.0
+
+### 4. Mencari Broadcast
+Broadcast ID adalah alamat terakhir di dalam blok supernet 10.128.0.0/22
+- Kita tahu prefix-nya /22, yang menyisakan 10 bit untuk host ($32 - 22 = 10).
+- Ukuran blok ini adalah $2^{10} = 1024$ alamat.
+- Blok 1024 alamat ini mencakup: 10.128.0.x (256 alamat) | 10.128.1.x (256 alamat) | 10.128.2.x (256 alamat) | 10.128.3.x (256 alamat)
+- Alamat terakhir di blok ini adalah alamat terakhir di 10.128.3.x
+- Hasilnya adalah 10.128.3.255
+
+### 5. Mencari Range Host
+Range Host adalah semua alamat yang dapat digunakan yang berada di antara Network ID dan Broadcast ID.
+- Host Pertama: Network ID + 1 $\rightarrow$ 10.128.0.0 + 1 = 10.128.0.1
+- Host Terakhir: Broadcast ID - 1 $\rightarrow$ 10.128.3.255 - 1 = 10.128.3.254
+- Hasilnya adalah 10.128.0.1 - 10.128.3.254
+
+### 6. Mencari Gateway
+Supernet adalah rute ringkasan logis, bukan LAN fisik. Jadi tidak memiliki satu "pintu keluar" (gateway) spesifik. Oleh karena itu, kolom ini diisi (N/A).
   
 ## Konfigurasi IP & Command CLI
 
