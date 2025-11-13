@@ -7,7 +7,7 @@
    - Gunakan rumus 2^n - 2 lebih dari kebutuhan host, di mana n adalah jumlah bit host.
    - 2^8 - 2 = 254 host (Terlalu kecil)
    - 2^9 - 2 = 510 host (Cukup).
-   - Kita butuh 9 bit host. Prefix adalah sisa bitnya: 32 (total bit) - 9 { (bit host) = 23.
+   - Kita butuh 9 bit host. Prefix adalah sisa bitnya: 32 (total bit) - 9 (bit host) = 23.
    - Hasil prefix :/23
 2. Mencari Network ID
    - Karena ini adalah jaringan pertama yang kita hitung, kita mulai dari alamat paling awal yang kita miliki. Network ID: `10.128.0.0`
