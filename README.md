@@ -1,5 +1,60 @@
 # I Gede Bagus Saka Sinatrya - 5027241088
 
+## Perhitungan Subnetting VLSM
+
+### Sekretariat (380 Host)
+1. Mencari Prefix
+   - Gunakan rumus 2^n - 2 lebih dari kebutuhan host, di mana n adalah jumlah bit host.
+   - 2^8 - 2 = 254 host (Terlalu kecil)
+   - 2^9 - 2 = 510 host (Cukup).
+   - Kita butuh 9 bit host. Prefix adalah sisa bitnya: 32 (total bit) - 9 { (bit host) = 23.
+   - Hasil prefix :/23
+2. Mencari Network ID
+   Karena ini adalah jaringan pertama yang kita hitung, kita mulai dari alamat paling awal yang kita miliki. Network ID: `10.128.0.0`
+3. Mencari Mask
+   Jadi disini kita tinggal mengubah prefix /23 ke format desimal
+   - Cara: Prefix /23 berarti ada 23 bit angka "1" dari kiri.
+   - Biner: `11111111.11111111.11111110.00000000`
+   - Desimal: `255.255.254.0`
+4. Mencari Broadcast
+   - Cara: Kita tahu blok ini punya 2^9 = 512 alamat. Blok 512 alamat yang dimulai dari `10.128.0.0` akan mencakup semua alamat dari `10.128.0.x` dan `10.128.1.x.`
+   - Alamat terakhir di rentang `10.128.1.x` adalah `10.128.1.255`.
+   - Hasil Broadcast: `10.128.1.255`
+5. Mencari Range Host
+   - Ini adalah semua alamat di antara Network ID dan Broadcast ID.
+   - Host Pertama: `10.128.0.0 + 1 = 10.128.0.1`
+   - Host Terakhir: `10.128.1.255 - 1 = 10.128.1.254`
+   - Hasil Range Host: `10.128.0.1 - 10.128.1.254`
+6. Mencari Gateway
+   Sesuai konvensi, kita gunakan alamat pertama yang tersedia dari Range Host. Gateaway: `10.128.0.1`
+
+### Kurikulum (220 Host)
+1. Mencari prefix
+   - caranya sama seperti di atas tetapi di sini jumlahnya harus lebih dari atau sama dengan total host kurikulum.
+   - 2^7 - 2 = 126 (Terlalu kecil).
+   - 2^8 - 2 = 254 (Cukup).
+   - Kita butuh 8 bit host. Prefix-nya: 32 - 8 = 24.
+   - Hasil Prefix: /24
+2. Mencari Network ID
+   - Cara: Alokasi VLSM harus berurutan. Kita mulai dari alamat IP tepat setelah Broadcast ID jaringan sebelumnya.
+   - Broadcast ID Sekretariat adalah `10.128.1.255`. Alamat setelahnya adalah `10.128.2.0`.
+   - Hasil Network: `10.128.2.0`
+3. Mencari Mask
+   - Cara: Prefix /24 berarti ada 24 bit angka "1".
+   - Biner: 11111111.11111111.11111111.00000000
+   - Desimal: `255.255.255.0`
+4. Mencari Broadcast ID
+   - Cara: Kita tahu blok ini punya 2^8 = 256 alamat. Blok 256 alamat yang dimulai dari 10.128.2.0 akan menggunakan seluruh rentang 10.128.2.x.
+   - Alamat terakhir di rentang itu adalah `10.128.2.255`.
+   - Hasil Broadcast: `10.128.2.255`
+5. Mencari Range Host
+   - Cara: Alamat di antara Network ID dan Broadcast ID.
+   - Host Pertama: `10.128.2.0 + 1 = 10.128.2.1`
+   - Host Terakhir: `10.128.2.255 - 1 = 10.128.2.254`
+   - Hasil Range Host: `10.128.2.1 - 10.128.2.254`
+6. Mencari Gateway
+   - Cara: Gunakan alamat pertama yang tersedia dari Range Host.
+   - Hasil Gateway: `10.128.2.1`
 ## Perhitungan Supernetting CIDR
 
 ### 1.Menentukan Jaringan (Input)
@@ -34,7 +89,7 @@ Mask hanyalah cara penulisan lain dari Prefix /22.
 ### 4. Mencari Broadcast
 Broadcast ID adalah alamat terakhir di dalam blok supernet 10.128.0.0/22
 - Kita tahu prefix-nya /22, yang menyisakan 10 bit untuk host ($32 - 22 = 10).
-- Ukuran blok ini adalah $2^{10} = 1024$ alamat.
+- Ukuran blok ini adalah 2^{10} = 1024 alamat.
 - Blok 1024 alamat ini mencakup: 10.128.0.x (256 alamat) | 10.128.1.x (256 alamat) | 10.128.2.x (256 alamat) | 10.128.3.x (256 alamat)
 - Alamat terakhir di blok ini adalah alamat terakhir di 10.128.3.x
 - Hasilnya adalah 10.128.3.255
