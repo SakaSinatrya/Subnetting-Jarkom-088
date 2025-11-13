@@ -10,23 +10,23 @@
    - Kita butuh 9 bit host. Prefix adalah sisa bitnya: 32 (total bit) - 9 { (bit host) = 23.
    - Hasil prefix :/23
 2. Mencari Network ID
-   Karena ini adalah jaringan pertama yang kita hitung, kita mulai dari alamat paling awal yang kita miliki. Network ID: `10.128.0.0`
-3. Mencari Mask
-   Jadi disini kita tinggal mengubah prefix /23 ke format desimal
+   - Karena ini adalah jaringan pertama yang kita hitung, kita mulai dari alamat paling awal yang kita miliki. Network ID: `10.128.0.0`
+4. Mencari Mask
+   - Jadi disini kita tinggal mengubah prefix /23 ke format desimal
    - Cara: Prefix /23 berarti ada 23 bit angka "1" dari kiri.
    - Biner: `11111111.11111111.11111110.00000000`
    - Desimal: `255.255.254.0`
-4. Mencari Broadcast
+5. Mencari Broadcast
    - Cara: Kita tahu blok ini punya 2^9 = 512 alamat. Blok 512 alamat yang dimulai dari `10.128.0.0` akan mencakup semua alamat dari `10.128.0.x` dan `10.128.1.x.`
    - Alamat terakhir di rentang `10.128.1.x` adalah `10.128.1.255`.
    - Hasil Broadcast: `10.128.1.255`
-5. Mencari Range Host
+6. Mencari Range Host
    - Ini adalah semua alamat di antara Network ID dan Broadcast ID.
    - Host Pertama: `10.128.0.0 + 1 = 10.128.0.1`
    - Host Terakhir: `10.128.1.255 - 1 = 10.128.1.254`
    - Hasil Range Host: `10.128.0.1 - 10.128.1.254`
-6. Mencari Gateway
-   Sesuai konvensi, kita gunakan alamat pertama yang tersedia dari Range Host. Gateaway: `10.128.0.1`
+7. Mencari Gateway
+   - Sesuai konvensi, kita gunakan alamat pertama yang tersedia dari Range Host. Gateaway: `10.128.0.1`
 
 ### Kurikulum (220 Host)
 1. Mencari prefix
